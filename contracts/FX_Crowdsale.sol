@@ -1,18 +1,8 @@
 pragma solidity 0.4.15;
 
-import './ownership/multiowned.sol';
-import './crowdsale/FixedTimeBonuses.sol';
-import './crowdsale/FundsRegistry.sol';
-import './crowdsale/InvestmentAnalytics.sol';
-import './security/ArgumentsChecker.sol';
-import './STQToken.sol';
-import 'zeppelin-solidity/contracts/ReentrancyGuard.sol';
-import 'zeppelin-solidity/contracts/math/Math.sol';
-import 'zeppelin-solidity/contracts/math/SafeMath.sol';
 
 
-/// @title Storiqa ICO contract
-contract STQCrowdsale is ArgumentsChecker, ReentrancyGuard, multiowned, InvestmentAnalytics {
+contract Crowdsale is ArgumentsChecker, ReentrancyGuard, multiowned, InvestmentAnalytics {
     using Math for uint256;
     using SafeMath for uint256;
     using FixedTimeBonuses for FixedTimeBonuses.Data;
@@ -138,8 +128,8 @@ contract STQCrowdsale is ArgumentsChecker, ReentrancyGuard, multiowned, Investme
         uint256 change = msg.value.sub(payment);
 
         // issue tokens
-        var (stq, timeBonus) = calcSTQAmount(payment, usingPaymentChannel ? c_paymentChannelBonusPercent : 0);
-        m_token.mint(investor, stq);
+        var (fxc, timeBonus) = calcSTQAmount(payment, usingPaymentChannel ? c_paymentChannelBonusPercent : 0);
+        m_token.mint(investor, fxc);
 
         // record payment
         m_funds.invested.value(payment)(investor);
@@ -203,7 +193,7 @@ contract STQCrowdsale is ArgumentsChecker, ReentrancyGuard, multiowned, Investme
         requiresState(IcoState.PAUSED)
         onlymanyowners(sha3(msg.data))
     {
-        m_token = STQToken(_token);
+        m_token = FXCToken(_token);
     }
 
     /// @notice In case we need to attach to existent funds
@@ -319,7 +309,7 @@ contract STQCrowdsale is ArgumentsChecker, ReentrancyGuard, multiowned, Investme
         return 0;
     }
 
-    /// @dev calculates amount of STQ to which payer of _wei is entitled
+   
     function calcSTQAmount(uint _wei, uint extraBonus) private constant returns (uint stq, uint timeBonus) {
         timeBonus = m_bonuses.getBonus(getCurrentTime());
         uint bonus = extraBonus.add(timeBonus).add(getLargePaymentBonus(_wei));
@@ -386,25 +376,25 @@ contract STQCrowdsale is ArgumentsChecker, ReentrancyGuard, multiowned, Investme
 
     // FIELDS
 
-    /// @notice starting exchange rate of STQ
-    uint public constant c_STQperETH = 100000;
+    
+    uint public constant c_fxcperETH = 100000;
 
-    /// @notice minimum investment
+
     uint public constant c_MinInvestment = 10 finney;
 
-    /// @notice minimum investments to consider ICO as a success
+
     uint public constant c_MinFunds = 30000 ether;
 
-    /// @notice maximum investments to be accepted during ICO
+
     uint public constant c_MaximumFunds = 90000 ether;
 
-    /// @notice start time of the ICO
+
     uint public constant c_startTime = 1508889600;
 
-    /// @notice authorised payment bonus
+
     uint public constant c_paymentChannelBonusPercent = 2;
 
-    /// @notice timed bonuses
+
     FixedTimeBonuses.Data m_bonuses;
 
     uint public constant c_maxLastInvestments = 100;
