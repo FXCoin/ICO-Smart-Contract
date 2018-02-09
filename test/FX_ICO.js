@@ -1,12 +1,9 @@
 'use strict';
 
-import {crowdsaleUTest} from './utest/Crowdsale';
-
-const STQPreICO = artifacts.require("./test_helpers/STQPreICOTestHelper.sol");
-const STQToken = artifacts.require("./STQToken.sol");
 
 
-contract('STQPreICO', function(accounts) {
+
+contract('FX_ICO', function(accounts) {
 
     async function instantiate(role) {
         const token = await STQToken.new([role.owner1, role.owner2, role.owner3], {from: role.nobody});
@@ -24,8 +21,8 @@ contract('STQPreICO', function(accounts) {
         extraPaymentFunction: 'buy',
         rate: 100000,
         hardCap: web3.toWei(400, 'finney'),
-        startTime: (new Date('Thu, 12 Oct 2017 0:00:00 GMT')).getTime() / 1000,
-        endTime: (new Date('Fri, 13 Oct 2017 0:00:00 GMT')).getTime() / 1000,
+        startTime: (new Date('Thu, 15 Feb 2018 0:00:00 GMT')).getTime() / 1000,
+        endTime: (new Date('Fri, 30 Feb 2018 0:00:00 GMT')).getTime() / 1000,
         maxTimeBonus: 40,
         firstPostICOTxFinishesSale: true,
         postICOTxThrows: false,
