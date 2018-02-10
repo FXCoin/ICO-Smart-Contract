@@ -124,7 +124,7 @@ contract FXCoinICO is ERC20, SafeMath{
 	string 	public name = "FXCoin";
 	string 	public symbol = "FXC";
 	uint 	public decimals = 4;
-	uint256 public INITIAL_SUPPLY = 3500000000000;
+	uint256 public INITIAL_SUPPLY = 350000000000;
 	uint256  public totalSupply;
 	uint256 public price;
 	address public owner;
@@ -135,7 +135,7 @@ contract FXCoinICO is ERC20, SafeMath{
 		balances[msg.sender] = INITIAL_SUPPLY;  
 		endTime = now + 1 weeks;
 		owner 	= msg.sender;
-		price 	= 850;
+		price 	= 8500000;
 	}
 
 }
